@@ -1,0 +1,20 @@
+# Secrets – never upload!
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# dbt (generated files)
+dbt/**/target/
+dbt/**/logs/
+dbt/**/dbt_packages/
+
+# Data files (they live in Databricks, not in git)
+*.json
+!**/*.example.json
+
+# Editor / system
+.vscode/
+.DS_Store
