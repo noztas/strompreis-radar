@@ -1,7 +1,9 @@
-import json                       # NEW: to write Python objects into a .json file
-import os                         # NEW: to create folders
+import json                       # to write Python objects into a .json file
+import os                         # to create folders
+import time                       # to pause between downloads
 import requests
 from datetime import datetime
+import time                       # to pause between downloads
 
 
 def download_week(series_id, ts):
@@ -11,7 +13,7 @@ def download_week(series_id, ts):
     return response.json()
 
 
-# NEW: save one week to a file. Same series + same week = same file name,
+# Save one week to a file. Same series + same week = same file name,
 # so running it again overwrites the file instead of making a copy (idempotent).
 def save_week(week_data, series_id, ts):
     """Save one week of data as data/raw/<series_id>_<ts>.json and return the path."""
@@ -57,6 +59,13 @@ print("Missing prices:", missing)
 # 8. Show the first hour
 print("First hour:", datetime.fromtimestamp(rows[0][0] / 1000), "→", rows[0][1], "€/MWh")
 
-# 9. NEW: save the week to a file
+# 9. Save the week to a file
 saved_path = save_week(week_data, 4169, last_ts)
 print("Saved to:", saved_path)
+
+# 10. Download and save several weeks (test: first 3 only)
+for ts in timestamps:
+    week_data = download_week(4169, ts)
+    path = save_week(week_data, 4169, ts)
+    print("Saved:", path)
+    time.sleep(0.5)
