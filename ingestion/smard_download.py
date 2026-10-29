@@ -62,8 +62,20 @@ print("First hour:", datetime.fromtimestamp(rows[0][0] / 1000), "→", rows[0][1
 saved_path = save_week(week_data, 4169, last_ts)
 print("Saved to:", saved_path)
 
-# 10. Download and save all weeks (backfill)
-for ts in timestamps:
+# 10. Choose which weeks to download
+#     "backfill" = all weeks (only once at the start)
+#     "daily"    = only the 2 newest weeks (covers the last 7 days)
+MODE = "daily"
+
+if MODE == "backfill":
+    weeks_to_download = timestamps
+else:
+    weeks_to_download = timestamps[-2:]
+
+print("Mode:", MODE, "→ weeks to download:", len(weeks_to_download))
+
+# 11. Download and save the chosen weeks
+for ts in weeks_to_download:
     week_data = download_week(4169, ts)
     path = save_week(week_data, 4169, ts)
     print("Saved:", path)
