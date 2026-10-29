@@ -1,3 +1,5 @@
+import json                       # NEW: to write Python objects into a .json file
+import os                         # NEW: to create folders
 import requests
 from datetime import datetime
 
@@ -7,6 +9,18 @@ def download_week(series_id, ts):
     week_url = f"https://www.smard.de/app/chart_data/{series_id}/DE-LU/{series_id}_DE-LU_hour_{ts}.json"
     response = requests.get(week_url)
     return response.json()
+
+
+# NEW: save one week to a file. Same series + same week = same file name,
+# so running it again overwrites the file instead of making a copy (idempotent).
+def save_week(week_data, series_id, ts):
+    """Save one week of data as data/raw/<series_id>_<ts>.json and return the path."""
+    folder = "data/raw"
+    os.makedirs(folder, exist_ok=True)          # create the folder; no error if it already exists
+    path = f"{folder}/{series_id}_{ts}.json"
+    with open(path, "w") as f:                  # "w" = write (overwrite if the file exists)
+        json.dump(week_data, f)
+    return path
 
 
 # 1. The address of the index file (the "table of contents")
@@ -42,3 +56,7 @@ print("Missing prices:", missing)
 
 # 8. Show the first hour
 print("First hour:", datetime.fromtimestamp(rows[0][0] / 1000), "→", rows[0][1], "€/MWh")
+
+# 9. NEW: save the week to a file
+saved_path = save_week(week_data, 4169, last_ts)
+print("Saved to:", saved_path)
