@@ -5,11 +5,24 @@ import requests
 from datetime import datetime
 
 
+def get_json(url, retries=3):
+    """Download a URL and return its JSON. Try up to 3 times if it fails."""
+    for attempt in range(1, retries + 1):
+        try:
+            response = requests.get(url, timeout=30)   # wait at most 30 seconds
+            response.raise_for_status()                # treat errors like 404/500 as failures too
+            return response.json()                     # success → leave the function
+        except requests.exceptions.RequestException as error:
+            print(f"  Attempt {attempt} of {retries} failed: {error}")
+            if attempt == retries:
+                raise                                  # 3rd failure → really stop
+            time.sleep(5)                              # wait a bit, then try again
+
+
 def download_week(series_id, ts):
     """Download one week of SMARD data and return it as a Python object."""
     week_url = f"https://www.smard.de/app/chart_data/{series_id}/DE-LU/{series_id}_DE-LU_hour_{ts}.json"
-    response = requests.get(week_url)
-    return response.json()
+    return get_json(week_url)
 
 
 # Save one week to a file. Same series + same week = same file name,
@@ -27,8 +40,7 @@ def save_week(week_data, series_id, ts):
 def get_timestamps(series_id):
     """Download the index of one series and return its list of week timestamps."""
     index_url = f"https://www.smard.de/app/chart_data/{series_id}/DE-LU/index_hour.json"
-    response = requests.get(index_url)
-    return response.json()["timestamps"]
+    return get_json(index_url)["timestamps"]
 
 
 # 1. The address of the index file (the "table of contents")
