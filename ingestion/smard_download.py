@@ -24,6 +24,13 @@ def save_week(week_data, series_id, ts):
     return path
 
 
+def get_timestamps(series_id):
+    """Download the index of one series and return its list of week timestamps."""
+    index_url = f"https://www.smard.de/app/chart_data/{series_id}/DE-LU/index_hour.json"
+    response = requests.get(index_url)
+    return response.json()["timestamps"]
+
+
 # 1. The address of the index file (the "table of contents")
 url = "https://www.smard.de/app/chart_data/4169/DE-LU/index_hour.json"
 
@@ -62,21 +69,28 @@ print("First hour:", datetime.fromtimestamp(rows[0][0] / 1000), "→", rows[0][1
 saved_path = save_week(week_data, 4169, last_ts)
 print("Saved to:", saved_path)
 
-# 10. Choose which weeks to download
-#     "backfill" = all weeks (only once at the start)
+# 10. Which series to download
+#     4169 = price, 4068 = solar, 4067 = wind onshore, 1225 = wind offshore, 410 = consumption
+SERIES_IDS = [4169, 4068, 4067, 1225, 410]
+
+# 11. Choose the mode
+#     "backfill" = all weeks (once, or when a new series is added)
 #     "daily"    = only the 2 newest weeks (covers the last 7 days)
 MODE = "daily"
 
-if MODE == "backfill":
-    weeks_to_download = timestamps
-else:
-    weeks_to_download = timestamps[-2:]
+# 12. For each series: get its own index, then download the chosen weeks
+for series_id in SERIES_IDS:
+    series_timestamps = get_timestamps(series_id)
 
-print("Mode:", MODE, "→ weeks to download:", len(weeks_to_download))
+    if MODE == "backfill":
+        weeks_to_download = series_timestamps
+    else:
+        weeks_to_download = series_timestamps[-2:]
 
-# 11. Download and save the chosen weeks
-for ts in weeks_to_download:
-    week_data = download_week(4169, ts)
-    path = save_week(week_data, 4169, ts)
-    print("Saved:", path)
-    time.sleep(0.5)
+    print("Series", series_id, "| mode:", MODE, "→ weeks to download:", len(weeks_to_download))
+
+    for ts in weeks_to_download:
+        week_data = download_week(series_id, ts)
+        path = save_week(week_data, series_id, ts)
+        print("  Saved:", path)
+        time.sleep(0.5)
