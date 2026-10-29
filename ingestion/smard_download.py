@@ -3,7 +3,6 @@ import os                         # to create folders
 import time                       # to pause between downloads
 import requests
 from datetime import datetime
-import time                       # to pause between downloads
 
 
 def download_week(series_id, ts):
@@ -63,7 +62,7 @@ print("First hour:", datetime.fromtimestamp(rows[0][0] / 1000), "→", rows[0][1
 saved_path = save_week(week_data, 4169, last_ts)
 print("Saved to:", saved_path)
 
-# 10. Download and save several weeks (test: first 3 only)
+# 10. Download and save all weeks (backfill)
 for ts in timestamps:
     week_data = download_week(4169, ts)
     path = save_week(week_data, 4169, ts)
