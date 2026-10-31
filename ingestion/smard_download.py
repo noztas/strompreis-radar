@@ -2,7 +2,6 @@ import json                       # to write Python objects into a .json file
 import os                         # to create folders
 import time                       # to pause between downloads
 import requests
-from datetime import datetime
 
 
 def get_json(url, retries=3):
@@ -43,54 +42,16 @@ def get_timestamps(series_id):
     return get_json(index_url)["timestamps"]
 
 
-# 1. The address of the index file (the "table of contents")
-url = "https://www.smard.de/app/chart_data/4169/DE-LU/index_hour.json"
-
-# 2. Ask SMARD for the file
-response = requests.get(url)
-
-# 3. Turn the JSON text into a Python object
-data = response.json()
-
-# 4. Take the list of timestamps out of it
-timestamps = data["timestamps"]
-
-# 5. Count and show the results
-print("Number of weeks:", len(timestamps))
-print("First week:", datetime.fromtimestamp(timestamps[0] / 1000))
-print("Last week:", datetime.fromtimestamp(timestamps[-1] / 1000))
-
-# 6. Download the LAST week using our function
-last_ts = timestamps[-1]
-week_data = download_week(4169, last_ts)
-rows = week_data["series"]      # list of [timestamp, price] pairs
-
-# 7. Count all rows, and count the missing prices (None)
-missing = 0
-for row in rows:
-    if row[1] is None:
-        missing = missing + 1
-
-print("Rows in this week:", len(rows))
-print("Missing prices:", missing)
-
-# 8. Show the first hour
-print("First hour:", datetime.fromtimestamp(rows[0][0] / 1000), "→", rows[0][1], "€/MWh")
-
-# 9. Save the week to a file
-saved_path = save_week(week_data, 4169, last_ts)
-print("Saved to:", saved_path)
-
-# 10. Which series to download
+# 1. Which series to download
 #     4169 = price, 4068 = solar, 4067 = wind onshore, 1225 = wind offshore, 410 = consumption
 SERIES_IDS = [4169, 4068, 4067, 1225, 410]
 
-# 11. Choose the mode
+# 2. Choose the mode
 #     "backfill" = all weeks (once, or when a new series is added)
 #     "daily"    = only the 2 newest weeks (covers the last 7 days)
 MODE = "daily"
 
-# 12. For each series: get its own index, then download the chosen weeks
+# 3. For each series: get its own index, then download the chosen weeks
 for series_id in SERIES_IDS:
     series_timestamps = get_timestamps(series_id)
 
