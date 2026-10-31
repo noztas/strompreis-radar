@@ -51,19 +51,26 @@ SERIES_IDS = [4169, 4068, 4067, 1225, 410]
 #     "daily"    = only the 2 newest weeks (covers the last 7 days)
 MODE = "daily"
 
-# 3. For each series: get its own index, then download the chosen weeks
-for series_id in SERIES_IDS:
-    series_timestamps = get_timestamps(series_id)
+def main():
+    # 3. For each series: get its own index, then download the chosen weeks
+    for series_id in SERIES_IDS:
+        series_timestamps = get_timestamps(series_id)
 
-    if MODE == "backfill":
-        weeks_to_download = series_timestamps
-    else:
-        weeks_to_download = series_timestamps[-2:]
+        if MODE == "backfill":
+            weeks_to_download = series_timestamps
+        else:
+            weeks_to_download = series_timestamps[-2:]
 
-    print("Series", series_id, "| mode:", MODE, "→ weeks to download:", len(weeks_to_download))
+        print("Series", series_id, "| mode:", MODE, "→ weeks to download:", len(weeks_to_download))
 
-    for ts in weeks_to_download:
-        week_data = download_week(series_id, ts)
-        path = save_week(week_data, series_id, ts)
-        print("  Saved:", path)
-        time.sleep(0.5)
+        for ts in weeks_to_download:
+            week_data = download_week(series_id, ts)
+            path = save_week(week_data, series_id, ts)
+            print("  Saved:", path)
+            time.sleep(0.5)
+
+
+# Start button: run main() only when this file is run directly,
+# not when another file (like a test) imports a function from it.
+if __name__ == "__main__":
+    main()
