@@ -26,9 +26,8 @@ def download_week(series_id, ts):
 
 # Save one week to a file. Same series + same week = same file name,
 # so running it again overwrites the file instead of making a copy (idempotent).
-def save_week(week_data, series_id, ts):
-    """Save one week of data as data/raw/<series_id>_<ts>.json and return the path."""
-    folder = "data/raw"
+def save_week(week_data, series_id, ts, folder="data/raw"):
+    """Save one week of data as <folder>/<series_id>_<ts>.json and return the path."""
     os.makedirs(folder, exist_ok=True)          # create the folder; no error if it already exists
     path = f"{folder}/{series_id}_{ts}.json"
     with open(path, "w") as f:                  # "w" = write (overwrite if the file exists)
