@@ -19,3 +19,6 @@ CREATE SCHEMA IF NOT EXISTS energy.gold;
 
 -- Volume = a folder for files inside bronze; the raw JSON files land here first
 CREATE VOLUME IF NOT EXISTS energy.bronze.landing;
+
+-- Volume for Auto Loader's memory (checkpoint): which files are already loaded
+CREATE VOLUME IF NOT EXISTS energy.bronze.checkpoints;
