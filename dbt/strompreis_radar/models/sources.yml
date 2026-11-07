@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: energy
+    schema: bronze
+    tables:
+      - name: smard_raw
