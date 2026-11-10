@@ -1,7 +1,8 @@
 # Databricks notebook source
 # Load all SMARD JSON files from the landing volume into the Bronze table.
 # Auto Loader remembers which files it already loaded (checkpoint),
-# so every run adds only new files.
+# so every run adds only new files and files that changed (allowOverwrites).
+
 
 LANDING = "/Volumes/energy/bronze/landing"                 # where the JSON files are
 CHECKPOINT = "/Volumes/energy/bronze/checkpoints/smard_raw" # Auto Loader's memory
@@ -16,6 +17,7 @@ df = (
     .format("cloudFiles")                            # cloudFiles = Auto Loader
     .option("cloudFiles.format", "json")             # the files are JSON
     .option("cloudFiles.schemaLocation", CHECKPOINT) # where it saves the column list it found
+    .option("cloudFiles.allowOverwrites", "true")    # changed file (same name) → load it again
     .load(LANDING)
     .select(
         "*",                                               # keep all columns from the JSON
