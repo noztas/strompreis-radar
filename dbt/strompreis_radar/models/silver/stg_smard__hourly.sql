@@ -5,6 +5,21 @@ with hours as (
         _source_file,
         _load_ts
     from {{ source('bronze', 'smard_raw') }}
+),
+
+ranked as (
+    select
+        series_id,
+        timestamp_millis(cast(hour_pair[0] as bigint)) as ts_utc,
+        hour_pair[1]                                   as value,
+        _source_file,
+        _load_ts,
+        row_number() over (
+            partition by series_id, hour_pair[0]
+            order by _load_ts desc
+        )                                              as version_rank
+    from hours
+    where hour_pair[1] is not null
 )
 
 select
@@ -15,11 +30,12 @@ select
         when 4067 then 'wind_onshore'
         when 1225 then 'wind_offshore'
         when 410  then 'consumption'
-    end                                                     as series_name,
-    timestamp_millis(cast(hour_pair[0] as bigint))          as ts_utc,
-    from_utc_timestamp(timestamp_millis(cast(hour_pair[0] as bigint)), 'Europe/Berlin') as ts_berlin,
-    hour_pair[1]                                            as value,
+    end                                                 as series_name,
+    ts_utc,
+    from_utc_timestamp(ts_utc, 'Europe/Berlin')         as ts_berlin,
+    value,
     _source_file,
     _load_ts
-from hours
-where hour_pair[1] is not null
+from ranked
+where version_rank = 1
+
