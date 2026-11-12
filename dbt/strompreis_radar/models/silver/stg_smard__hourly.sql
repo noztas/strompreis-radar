@@ -1,3 +1,9 @@
+{{ config(
+    materialized = 'incremental',
+    incremental_strategy = 'merge',
+    unique_key = ['series_id', 'ts_utc']
+) }}
+
 with hours as (
     select
         cast(regexp_extract(_source_file, '/(\\d+)_\\d+\\.json$', 1) as int) as series_id,
@@ -5,6 +11,9 @@ with hours as (
         _source_file,
         _load_ts
     from {{ source('bronze', 'smard_raw') }}
+    {% if is_incremental() %}
+    where _load_ts > (select max(_load_ts) from {{ this }})
+    {% endif %}
 ),
 
 ranked as (
