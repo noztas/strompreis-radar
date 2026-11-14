@@ -1,7 +1,8 @@
 {{ config(
     materialized = 'incremental',
     incremental_strategy = 'merge',
-    unique_key = ['series_id', 'ts_utc']
+    unique_key = ['series_id', 'ts_utc'],
+    tblproperties = {'delta.enableChangeDataFeed': 'true'}
 ) }}
 
 with hours as (
