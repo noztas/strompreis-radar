@@ -22,6 +22,7 @@ dbt-spark==1.10.3
 deepdiff==8.6.2
 et_xmlfile==2.0.0
 google-auth==2.62.0
+holidays==0.108
 idna==3.20
 importlib_metadata==10.1.0
 iniconfig==2.3.1
