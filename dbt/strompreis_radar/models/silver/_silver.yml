@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: stg_smard__hourly
+    columns:
+      - name: series_name
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['price_day_ahead', 'solar', 'wind_onshore', 'wind_offshore', 'consumption']
+      - name: value
+        data_tests:
+          - not_null
