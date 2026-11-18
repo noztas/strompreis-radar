@@ -1,0 +1,6 @@
+services:
+  scheduler:
+    volumes:
+      - ../ingestion:/usr/local/airflow/project/ingestion
+      - ../data:/usr/local/airflow/project/data
+      - ../dbt:/usr/local/airflow/project/dbt
