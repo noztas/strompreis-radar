@@ -2,14 +2,19 @@ from airflow.sdk import dag
 from airflow.providers.standard.operators.bash import BashOperator
 from pendulum import datetime
 from airflow.providers.databricks.operators.databricks import DatabricksRunNowOperator
+from datetime import timedelta
 
 PROJECT = "/usr/local/airflow/project"   # where the container sees my code (from the mount file)
 
 
 @dag(
-    schedule=None,                        # no schedule yet: only runs when I click Trigger
-    start_date=datetime(2026, 11, 1),
-    catchup=False,                        # don't run for past days automatically
+    schedule="0 14 * * *",                               # every day at 14:00
+    start_date=datetime(2026, 11, 1, tz="Europe/Berlin"),  # German time
+    catchup=False,
+    default_args={
+        "retries": 3,                                    # try again up to 3 times
+        "retry_delay": timedelta(minutes=5),             # wait 5 min between tries
+    },
     tags=["strompreis"],
 )
 def strompreis_daily():
