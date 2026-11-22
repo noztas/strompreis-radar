@@ -1,8 +1,12 @@
-{{ config(materialized = 'table') }}
+{{ config(
+    materialized = 'incremental',
+    incremental_strategy = 'merge',
+    unique_key = ['series_id', 'ts_utc', 'commit_version']
+) }}
 
 with changes as (
     select *
-    from table_changes('{{ ref("stg_smard__hourly") }}', 12)
+    from table_changes('{{ ref("stg_smard__hourly") }}', current_timestamp() - interval 3 days)
 ),
 
 pre as (
