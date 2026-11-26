@@ -1,0 +1,70 @@
+table mart_load_shift
+	lineageTag: f45492b3-3f72-4639-8530-04e13ef1a40e
+
+	/// € saved by running the 1 MW machine in the 4 cheapest hours instead of 08–11
+	measure 'Total Saved (€)' = SUM(mart_load_shift[saved_eur])
+		formatString: #,0
+		displayFolder: KPIs
+		lineageTag: e99012cb-0ea3-4162-8bf4-af9d5c520e2e
+
+	/// Saved ÷ normal cost. Add up first, then divide (Step 7: daily percents exploded on negative-price days)
+	measure 'Saved %' = DIVIDE(SUM(mart_load_shift[saved_eur]), SUM(mart_load_shift[normal_cost_eur]))
+		formatString: 0.0%
+		displayFolder: KPIs
+		lineageTag: 2ca1a1a3-0b45-4508-9ece-9895d5b3a75f
+
+	column date_day
+		dataType: dateTime
+		isHidden
+		formatString: Long Date
+		lineageTag: 2334309c-f685-407b-9175-4ac4b675051a
+		summarizeBy: none
+		sourceColumn: date_day
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column normal_cost_eur
+		dataType: double
+		lineageTag: 722f1646-677e-42c0-8723-b3df8cf3c258
+		summarizeBy: sum
+		sourceColumn: normal_cost_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column flexible_cost_eur
+		dataType: double
+		lineageTag: f09e3999-ed95-4021-a222-cf5f08c990fd
+		summarizeBy: sum
+		sourceColumn: flexible_cost_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column saved_eur
+		dataType: double
+		lineageTag: 55ea65e2-ec8e-4a12-a781-d28c903a97de
+		summarizeBy: sum
+		sourceColumn: saved_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition mart_load_shift = m
+		mode: import
+		source =
+				let
+				    Source = Databricks.Catalogs("dbc-a2cbda1f-cbb1.cloud.databricks.com", "/sql/1.0/warehouses/bc44dd4980fc6d10", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation=null]),
+				    energy_Database = Source{[Name="energy",Kind="Database"]}[Data],
+				    gold_Schema = energy_Database{[Name="gold",Kind="Schema"]}[Data],
+				    mart_load_shift_Table = gold_Schema{[Name="mart_load_shift",Kind="Table"]}[Data]
+				in
+				    mart_load_shift_Table
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,28 @@
+/// What-if slider: machine size in MW (1-10, default 1)
+table 'Machine MW'
+	lineageTag: 1649643e-b957-400c-9f41-94169866a4fb
+
+	measure 'Machine MW Value' = SELECTEDVALUE('Machine MW'[MW], 1)
+		formatString: 0
+		displayFolder: What-if
+		lineageTag: cc46eb6d-ae56-48ed-970d-64d9a3039271
+
+	column MW
+		formatString: 0
+		lineageTag: 6fb70d51-27d2-406c-b5ae-fc0832a5994d
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+	partition 'Machine MW' = calculated
+		mode: import
+		source = GENERATESERIES(1, 10, 1)
+
+	annotation PBI_Id = 90a0db2d531a45f1b8e01b8b8747f7c9
+

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "cardNegHours",
+  "position": {
+    "x": 272,
+    "y": 100,
+    "z": 2,
+    "height": 110,
+    "width": 232,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_market_hour"
+                    }
+                  },
+                  "Property": "Negative Price Hours"
+                }
+              },
+              "queryRef": "fct_market_hour.Negative Price Hours",
+              "nativeQueryRef": "Negative Price Hours",
+              "displayName": "Hours with negative price"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -15,6 +15,12 @@ dbt/**/dbt_packages/
 *.json
 !**/*.example.json
 
+# Power BI project (PBIP): keep the report files (pages, visuals, theme are .json)
+!powerbi/**/*.json
+# ...but not the data cache and my personal settings (they stay on my PC)
+powerbi/**/.pbi/cache.abf
+powerbi/**/.pbi/localSettings.json
+
 # Editor / system
 .vscode/
 .DS_Store

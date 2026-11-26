@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "cardRenewShare",
+  "position": {
+    "x": 520,
+    "y": 100,
+    "z": 3,
+    "height": 110,
+    "width": 232,
+    "tabOrder": 3
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_market_hour"
+                    }
+                  },
+                  "Property": "Renewable Share"
+                }
+              },
+              "queryRef": "fct_market_hour.Renewable Share",
+              "nativeQueryRef": "Renewable Share",
+              "displayName": "Renewable share"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

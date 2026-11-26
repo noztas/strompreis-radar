@@ -1,0 +1,23 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["dim_date","dim_hour","fct_market_hour","mart_load_shift","Machine MW","Flexible Hours"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dim_date
+ref table dim_hour
+ref table fct_market_hour
+ref table mart_load_shift
+ref table 'Machine MW'
+ref table 'Flexible Hours'
+
+ref cultureInfo en-US
+

@@ -1,0 +1,28 @@
+/// What-if slider: hours per day the machine must run (1-8, default 4)
+table 'Flexible Hours'
+	lineageTag: 17865bba-cb90-4181-be30-4356061dd86d
+
+	measure 'Flexible Hours Value' = SELECTEDVALUE('Flexible Hours'[Hours], 4)
+		formatString: 0
+		displayFolder: What-if
+		lineageTag: ac8985d2-e311-47cf-8dc5-f37f54516e68
+
+	column Hours
+		formatString: 0
+		lineageTag: 4ce8be37-13ff-42e8-ac3d-50b96e8a1b6d
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+	partition 'Flexible Hours' = calculated
+		mode: import
+		source = GENERATESERIES(1, 8, 1)
+
+	annotation PBI_Id = 33ab86918b964b5bbbb290637a7856fa
+

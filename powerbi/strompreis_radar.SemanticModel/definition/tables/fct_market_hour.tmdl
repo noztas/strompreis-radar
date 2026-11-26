@@ -1,0 +1,218 @@
+table fct_market_hour
+	lineageTag: 2237bc3f-2fe1-4057-aa2b-f1dbdd0dfa72
+
+	/// Average day-ahead price per hour, for whatever is filtered (year, month, hour …)
+	measure 'Avg Price (€/MWh)' = AVERAGE(fct_market_hour[price_eur_mwh])
+		formatString: #,0.00
+		displayFolder: KPIs
+		lineageTag: ee9127d2-b2f8-4f58-ac79-5e3c80057110
+
+	/// Hours with a price below 0 €/MWh (too much solar/wind, too little demand)
+	measure 'Negative Price Hours' = CALCULATE(COUNTROWS(fct_market_hour), fct_market_hour[price_eur_mwh] < 0)
+		formatString: #,0
+		displayFolder: KPIs
+		lineageTag: 725fd512-c2ba-4214-bd01-b7b9115d7831
+
+	/// Solar + wind ÷ consumption. Add up first, then divide (never average a share).
+	/// Only hours where both numbers exist, so early hours without consumption don't distort it.
+	measure 'Renewable Share' =
+			VAR complete_hours =
+			    FILTER(
+			        fct_market_hour,
+			        NOT ISBLANK(fct_market_hour[renewable_mwh])
+			            && NOT ISBLANK(fct_market_hour[consumption_mwh])
+			    )
+			RETURN
+			    DIVIDE(
+			        SUMX(complete_hours, fct_market_hour[renewable_mwh]),
+			        SUMX(complete_hours, fct_market_hour[consumption_mwh])
+			    )
+		formatString: 0.0%
+		displayFolder: KPIs
+		lineageTag: da929d82-a61a-41f8-81a5-2b864258d52d
+
+	/// What-if: cost of the NORMAL plan = N hours starting at 08:00, times MW. Only full days (>= 23 price hours), like mart_load_shift.
+	measure 'Normal Cost (what-if) €' =
+			VAR mw = [Machine MW Value]
+			VAR n = [Flexible Hours Value]
+			VAR full_days =
+			    FILTER(
+			        VALUES(fct_market_hour[date_day]),
+			        CALCULATE(COUNT(fct_market_hour[price_eur_mwh])) >= 23
+			    )
+			RETURN
+			    SUMX(
+			        full_days,
+			            VAR day_hours =
+			                FILTER(CALCULATETABLE(fct_market_hour), NOT ISBLANK(fct_market_hour[price_eur_mwh]))
+			            VAR normal_cost =
+			                SUMX(
+			                    FILTER(day_hours, fct_market_hour[hour_of_day] >= 8 && fct_market_hour[hour_of_day] < 8 + n),
+			                    fct_market_hour[price_eur_mwh]
+			                )
+			            RETURN normal_cost * mw
+			    )
+		formatString: #,0
+		displayFolder: What-if
+		lineageTag: 94a34990-e62e-4a19-9476-3d2b368ee2b8
+
+	/// What-if: money saved per day = (normal N hours - N cheapest hours) x MW, added up over all full days.
+	/// TOPN = the N cheapest hours of the day (like row_number in mart_load_shift); ts_utc breaks ties.
+	measure 'Saved (what-if) €' =
+			VAR mw = [Machine MW Value]
+			VAR n = [Flexible Hours Value]
+			VAR full_days =
+			    FILTER(
+			        VALUES(fct_market_hour[date_day]),
+			        CALCULATE(COUNT(fct_market_hour[price_eur_mwh])) >= 23
+			    )
+			RETURN
+			    SUMX(
+			        full_days,
+			            VAR day_hours =
+			                FILTER(CALCULATETABLE(fct_market_hour), NOT ISBLANK(fct_market_hour[price_eur_mwh]))
+			            VAR normal_cost =
+			                SUMX(
+			                    FILTER(day_hours, fct_market_hour[hour_of_day] >= 8 && fct_market_hour[hour_of_day] < 8 + n),
+			                    fct_market_hour[price_eur_mwh]
+			                )
+			            VAR cheap_cost =
+			                SUMX(
+			                    TOPN(n, day_hours, fct_market_hour[price_eur_mwh], ASC, fct_market_hour[ts_utc], ASC),
+			                    fct_market_hour[price_eur_mwh]
+			                )
+			            RETURN (normal_cost - cheap_cost) * mw
+			    )
+		formatString: #,0
+		displayFolder: What-if
+		lineageTag: 13b0e70a-b555-423e-acbf-b1f58cd6c190
+
+	/// What-if: saved / normal cost. SUM / SUM, never an average of daily percents.
+	measure 'Saved % (what-if)' = DIVIDE([Saved (what-if) €], [Normal Cost (what-if) €])
+		formatString: 0.0%
+		displayFolder: What-if
+		lineageTag: d41ae37a-8b91-4918-9e17-df635d1d2161
+
+	column ts_utc
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 255f9c72-adda-400e-ae4b-04d84dc0f27d
+		summarizeBy: none
+		sourceColumn: ts_utc
+
+		annotation SummarizationSetBy = Automatic
+
+	column ts_berlin
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0da5851d-0a03-47e3-853e-8ee97688ebdb
+		summarizeBy: none
+		sourceColumn: ts_berlin
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_day
+		dataType: dateTime
+		isHidden
+		formatString: Long Date
+		lineageTag: 966f4847-9e78-4263-a8d1-a2cd98534cd9
+		summarizeBy: none
+		sourceColumn: date_day
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column hour_of_day
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b0542f2f-1601-4427-947d-ed73ef0ce631
+		summarizeBy: none
+		sourceColumn: hour_of_day
+
+		annotation SummarizationSetBy = Automatic
+
+	column price_eur_mwh
+		dataType: double
+		lineageTag: 1e391a74-fdb6-4e46-a6b8-ad3284b86330
+		summarizeBy: none
+		sourceColumn: price_eur_mwh
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column solar_mwh
+		dataType: double
+		lineageTag: 52c46d67-53db-4fd0-a5ed-9a58e8acd3fb
+		summarizeBy: sum
+		sourceColumn: solar_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column wind_onshore_mwh
+		dataType: double
+		lineageTag: aa4621e3-10df-432e-a496-31d8e9475fa5
+		summarizeBy: sum
+		sourceColumn: wind_onshore_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column wind_offshore_mwh
+		dataType: double
+		lineageTag: 18c9ddd7-f7a2-4f07-96e3-75a9223d0fda
+		summarizeBy: sum
+		sourceColumn: wind_offshore_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column consumption_mwh
+		dataType: double
+		lineageTag: 23dd7ff9-850f-478d-b050-8221baa79a54
+		summarizeBy: sum
+		sourceColumn: consumption_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column renewable_mwh
+		dataType: double
+		lineageTag: ee63c8bf-60c6-4d77-84d1-bd9813443075
+		summarizeBy: sum
+		sourceColumn: renewable_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column renewable_share
+		dataType: double
+		lineageTag: 2714c538-9a8c-4c08-a33e-97f3d1dc7e37
+		summarizeBy: none
+		sourceColumn: renewable_share
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fct_market_hour = m
+		mode: import
+		source =
+				let
+				    Source = Databricks.Catalogs("dbc-a2cbda1f-cbb1.cloud.databricks.com", "/sql/1.0/warehouses/bc44dd4980fc6d10", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation=null]),
+				    energy_Database = Source{[Name="energy",Kind="Database"]}[Data],
+				    gold_Schema = energy_Database{[Name="gold",Kind="Schema"]}[Data],
+				    fct_market_hour_Table = gold_Schema{[Name="fct_market_hour",Kind="Table"]}[Data]
+				in
+				    fct_market_hour_Table
+
+	annotation PBI_ResultType = Table
+

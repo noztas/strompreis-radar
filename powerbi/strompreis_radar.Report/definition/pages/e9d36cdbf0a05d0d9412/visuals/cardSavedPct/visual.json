@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "cardSavedPct",
+  "position": {
+    "x": 1016,
+    "y": 100,
+    "z": 5,
+    "height": 110,
+    "width": 232,
+    "tabOrder": 5
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "mart_load_shift"
+                    }
+                  },
+                  "Property": "Saved %"
+                }
+              },
+              "queryRef": "mart_load_shift.Saved %",
+              "nativeQueryRef": "Saved %",
+              "displayName": "Saved %"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
