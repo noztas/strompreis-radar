@@ -1,0 +1,127 @@
+table dim_date
+	lineageTag: 9bf2dff1-a565-4b41-9099-f219f57b26aa
+	dataCategory: Time
+
+	column date_day
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: 760468fb-93e2-4c45-8c68-f2b606620e68
+		summarizeBy: none
+		sourceColumn: date_day
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 4181029c-06dd-49b3-8794-7ed3c07feebe
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = User
+
+	column quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 3d71cbc1-4bf7-4c06-b58f-129d989a62c8
+		summarizeBy: none
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = User
+
+	column month
+		dataType: int64
+		formatString: 0
+		lineageTag: 6c821249-9971-416b-979c-198e18ffaffd
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = User
+
+	column month_name
+		dataType: string
+		lineageTag: 243fa04e-974f-4b9d-baf6-eb22f86fc22c
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_month
+		dataType: int64
+		formatString: 0
+		lineageTag: 0bcc7d36-5e55-465b-9443-8009ccfa184d
+		summarizeBy: none
+		sourceColumn: day_of_month
+
+		annotation SummarizationSetBy = User
+
+	column weekday_number
+		dataType: int64
+		formatString: 0
+		lineageTag: df3c398e-465e-4806-a5eb-318034be0056
+		summarizeBy: none
+		sourceColumn: weekday_number
+
+		annotation SummarizationSetBy = User
+
+	column weekday_name
+		dataType: string
+		lineageTag: 11f07965-d4c1-4b1c-be9b-33372a788f83
+		summarizeBy: none
+		sourceColumn: weekday_name
+		sortByColumn: weekday_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 6bf29adc-b849-41d7-ab20-19bce35780e0
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_holiday
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 4936e617-1ba2-4f9b-974c-b2645414b28d
+		summarizeBy: none
+		sourceColumn: is_holiday
+
+		annotation SummarizationSetBy = Automatic
+
+	column holiday_name
+		dataType: string
+		lineageTag: cf069213-3276-44f7-8d46-6296718f89c8
+		summarizeBy: none
+		sourceColumn: holiday_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_working_day
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: feaf8674-0fab-4fd9-ad16-6778b756cc73
+		summarizeBy: none
+		sourceColumn: is_working_day
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				    Source = Databricks.Catalogs("dbc-a2cbda1f-cbb1.cloud.databricks.com", "/sql/1.0/warehouses/bc44dd4980fc6d10", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation=null]),
+				    energy_Database = Source{[Name="energy",Kind="Database"]}[Data],
+				    gold_Schema = energy_Database{[Name="gold",Kind="Schema"]}[Data],
+				    dim_date_Table = gold_Schema{[Name="dim_date",Kind="Table"]}[Data]
+				in
+				    dim_date_Table
+

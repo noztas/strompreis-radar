@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.3.0/schema.json",
+  "name": "cardAvgPrice",
+  "position": {
+    "x": 24,
+    "y": 100,
+    "z": 1,
+    "height": 110,
+    "width": 232,
+    "tabOrder": 1
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_market_hour"
+                    }
+                  },
+                  "Property": "Avg Price (€/MWh)"
+                }
+              },
+              "queryRef": "fct_market_hour.Avg Price (€/MWh)",
+              "nativeQueryRef": "Avg Price (€/MWh)",
+              "displayName": "Avg price (€/MWh)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

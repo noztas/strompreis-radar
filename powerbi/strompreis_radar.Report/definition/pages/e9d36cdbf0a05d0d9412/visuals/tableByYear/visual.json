@@ -1,0 +1,153 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "tableByYear",
+  "position": {
+    "x": 24,
+    "y": 226,
+    "z": 6,
+    "height": 470,
+    "width": 616,
+    "tabOrder": 6
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "year"
+                }
+              },
+              "queryRef": "dim_date.year",
+              "nativeQueryRef": "year",
+              "displayName": "Year"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_market_hour"
+                    }
+                  },
+                  "Property": "Avg Price (€/MWh)"
+                }
+              },
+              "queryRef": "fct_market_hour.Avg Price (€/MWh)",
+              "nativeQueryRef": "Avg Price (€/MWh)",
+              "displayName": "Avg price (€/MWh)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_market_hour"
+                    }
+                  },
+                  "Property": "Negative Price Hours"
+                }
+              },
+              "queryRef": "fct_market_hour.Negative Price Hours",
+              "nativeQueryRef": "Negative Price Hours",
+              "displayName": "Negative hours"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_market_hour"
+                    }
+                  },
+                  "Property": "Renewable Share"
+                }
+              },
+              "queryRef": "fct_market_hour.Renewable Share",
+              "nativeQueryRef": "Renewable Share",
+              "displayName": "Renewable share"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "mart_load_shift"
+                    }
+                  },
+                  "Property": "Total Saved (€)"
+                }
+              },
+              "queryRef": "mart_load_shift.Total Saved (€)",
+              "nativeQueryRef": "Total Saved (€)",
+              "displayName": "Saved (€)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "mart_load_shift"
+                    }
+                  },
+                  "Property": "Saved %"
+                }
+              },
+              "queryRef": "mart_load_shift.Saved %",
+              "nativeQueryRef": "Saved %",
+              "displayName": "Saved %"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "dim_date"
+                  }
+                },
+                "Property": "year"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Key numbers per year'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

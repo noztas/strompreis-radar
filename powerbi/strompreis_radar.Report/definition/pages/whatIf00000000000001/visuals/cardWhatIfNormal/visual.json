@@ -1,0 +1,61 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "cardWhatIfNormal",
+  "position": {
+    "x": 856,
+    "y": 206,
+    "z": 5,
+    "height": 110,
+    "width": 400,
+    "tabOrder": 5
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_market_hour"
+                    }
+                  },
+                  "Property": "Normal Cost (what-if) €"
+                }
+              },
+              "queryRef": "fct_market_hour.Normal Cost (what-if) €",
+              "nativeQueryRef": "Normal Cost (what-if) €",
+              "displayName": "Normal cost (€)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

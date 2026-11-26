@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "strompreis_radar"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9351542a-34cd-4480-b444-afd6da262342"
+  }
+}

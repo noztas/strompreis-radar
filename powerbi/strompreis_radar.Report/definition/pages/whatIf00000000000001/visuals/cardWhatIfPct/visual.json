@@ -1,0 +1,57 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.3.0/schema.json",
+  "name": "cardWhatIfPct",
+  "position": {
+    "x": 440,
+    "y": 206,
+    "z": 4,
+    "height": 110,
+    "width": 400,
+    "tabOrder": 4
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_market_hour"
+                    }
+                  },
+                  "Property": "Saved % (what-if)"
+                }
+              },
+              "queryRef": "fct_market_hour.Saved % (what-if)",
+              "nativeQueryRef": "Saved % (what-if)",
+              "displayName": "Saved %"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "30b6fc124d0e4b6ff861",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fct_market_hour"
+              }
+            },
+            "Property": "Saved % (what-if)"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

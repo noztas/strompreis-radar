@@ -1,0 +1,212 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.3.0/schema.json",
+  "name": "tableWhatIfByYear",
+  "position": {
+    "x": 24,
+    "y": 332,
+    "z": 6,
+    "height": 368,
+    "width": 1232,
+    "tabOrder": 6
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "year"
+                }
+              },
+              "queryRef": "dim_date.year",
+              "nativeQueryRef": "year",
+              "displayName": "Year"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_market_hour"
+                    }
+                  },
+                  "Property": "Normal Cost (what-if) €"
+                }
+              },
+              "queryRef": "fct_market_hour.Normal Cost (what-if) €",
+              "nativeQueryRef": "Normal Cost (what-if) €",
+              "displayName": "Normal cost (€)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_market_hour"
+                    }
+                  },
+                  "Property": "Saved (what-if) €"
+                }
+              },
+              "queryRef": "fct_market_hour.Saved (what-if) €",
+              "nativeQueryRef": "Saved (what-if) €",
+              "displayName": "Saved (€)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_market_hour"
+                    }
+                  },
+                  "Property": "Saved % (what-if)"
+                }
+              },
+              "queryRef": "fct_market_hour.Saved % (what-if)",
+              "nativeQueryRef": "Saved % (what-if)",
+              "displayName": "Saved %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "mart_load_shift"
+                    }
+                  },
+                  "Property": "Total Saved (€)"
+                }
+              },
+              "queryRef": "mart_load_shift.Total Saved (€)",
+              "nativeQueryRef": "Total Saved (€)",
+              "displayName": "Mart check: saved (€)"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "dim_date"
+                  }
+                },
+                "Property": "year"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Per year (last column = fixed Gold mart: 1 MW, 4 h, for checking)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "e477657f9c94fdaef1cb",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_date"
+              }
+            },
+            "Property": "year"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "8e74af7599bac50065ed",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fct_market_hour"
+              }
+            },
+            "Property": "Normal Cost (what-if) €"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "2feef22932327c99d115",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fct_market_hour"
+              }
+            },
+            "Property": "Saved (what-if) €"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "2edb1f785cbf81cf4f70",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fct_market_hour"
+              }
+            },
+            "Property": "Saved % (what-if)"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "e178ecfbdbea710f076a",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "mart_load_shift"
+              }
+            },
+            "Property": "Total Saved (€)"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

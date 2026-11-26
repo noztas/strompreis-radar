@@ -1,0 +1,12 @@
+relationship AutoDetected_91fa3199-3f14-414f-8edc-6ecf2887376f
+	fromColumn: fct_market_hour.hour_of_day
+	toColumn: dim_hour.hour_of_day
+
+relationship 662bb593-b989-20c1-bd5f-97d4ee64804a
+	fromColumn: fct_market_hour.date_day
+	toColumn: dim_date.date_day
+
+relationship a6c8fb77-2b9e-b23d-fa3e-9988a24ef40e
+	fromColumn: mart_load_shift.date_day
+	toColumn: dim_date.date_day
+

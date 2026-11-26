@@ -1,0 +1,101 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.3.0/schema.json",
+  "name": "scatterRenewPrice",
+  "position": {
+    "x": 24,
+    "y": 100,
+    "z": 2,
+    "height": 600,
+    "width": 1232,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "scatterChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "date_day"
+                }
+              },
+              "queryRef": "dim_date.date_day",
+              "nativeQueryRef": "date_day",
+              "active": true,
+              "displayName": "Day"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_market_hour"
+                    }
+                  },
+                  "Property": "Renewable Share"
+                }
+              },
+              "queryRef": "fct_market_hour.Renewable Share",
+              "nativeQueryRef": "Renewable Share",
+              "active": true,
+              "displayName": "Renewable share"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_market_hour"
+                    }
+                  },
+                  "Property": "Avg Price (€/MWh)"
+                }
+              },
+              "queryRef": "fct_market_hour.Avg Price (€/MWh)",
+              "nativeQueryRef": "Avg Price (€/MWh)",
+              "displayName": "Avg price (€/MWh)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Daily renewable share vs. daily average price'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
